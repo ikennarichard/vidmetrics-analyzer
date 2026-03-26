@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { extractChannelInfo, fetchChannelVideos } from "@/lib/youtube";
+import { calculateScore, extractChannelInfo, fetchChannelVideos } from "@/lib/youtube";
 import { useState } from "react";
 import VideoTable from "./video-table";
 
@@ -24,7 +24,13 @@ export default function ChannelInput() {
 
     try {
       const videos = await fetchChannelVideos(result.value);
-      setVideos(videos);
+
+      const enriched = videos.map((v: any) => ({
+        ...v,
+        score: calculateScore(v),
+      }));
+      enriched.sort((a: any, b: any) => b.score - a.score);
+      setVideos(enriched);
     } catch (err) {
       console.error("Failed to fetch videos", err);
       setError("Failed to fetch data");

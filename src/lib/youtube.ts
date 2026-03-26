@@ -53,3 +53,15 @@ export function extractChannelInfo(url: string) {
     return null;
   }
 }
+
+export function calculateScore(video: any) {
+  const views = Number(video.statistics.viewCount || 0);
+  const likes = Number(video.statistics.likeCount || 0);
+  const comments = Number(video.statistics.commentCount || 0);
+
+  if (views === 0) return 0;
+
+  const engagementRate = (likes + comments) / views;
+
+  return Math.round(views * engagementRate);
+}
