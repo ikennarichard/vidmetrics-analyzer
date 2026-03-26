@@ -74,7 +74,7 @@ export default function ChannelInput() {
           </p>
           <div className="flex gap-2">
             <Input
-              placeholder="Paste YouTube channel URL..."
+              placeholder="Paste youtube channel url..."
               className="text-white"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
