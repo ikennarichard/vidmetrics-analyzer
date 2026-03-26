@@ -18,7 +18,7 @@ export default function VideoChart({
   if (!videos.length) return null;
 
   const data = videos.slice(0, 5).map((v) => ({
-    name: v.snippet.title.slice(0, 20) + "...",
+    name: v.snippet.title.slice(0, 14),
     views: Number(v.statistics.viewCount),
     score: v.score,
   }));
@@ -36,7 +36,17 @@ export default function VideoChart({
       <div className="h-60">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data}>
-            <XAxis dataKey="name" hide />
+            <XAxis
+              dataKey="name"
+              tick={{ fill: "#737373", fontSize: 10 }}
+              axisLine={false}
+              tickLine={false}
+              interval={0}
+              height={48}
+              tickFormatter={(value) =>
+                value.length > 12 ? value.slice(0, 12) + "…" : value
+              }
+            />
             <YAxis
               tick={{ fill: "#737373", fontSize: 11 }}
               axisLine={false}

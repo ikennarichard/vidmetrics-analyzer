@@ -6,7 +6,11 @@ import {
   calculateScore,
   extractChannelInfo,
   fetchChannelVideos,
+  getChannelIdFromVideo,
+  resolveHandle,
+  searchChannelByName,
 } from "@/lib/youtube";
+import { ChartBar } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Skeleton } from "./ui/skeleton";
 import VideoChart from "./video-chart";
@@ -34,15 +38,35 @@ export default function ChannelInput() {
   const handleAnalyze = async () => {
     const result = extractChannelInfo(url);
 
-    if (!result || result.type !== "id") {
-      setError("Please use a /channel/ URL for now");
+    if (!result) {
+      setError(
+        "Couldn't parse that input — try a channel URL, video URL, or channel name",
+      );
       return;
     }
 
     setError("");
     setLoading(true);
+
     try {
-      const videos = await fetchChannelVideos(result.value);
+      let channelId = "";
+
+      if (result.type === "id") {
+        channelId = result.value;
+      } else if (result.type === "handle" || result.type === "custom") {
+        channelId = await resolveHandle(result.value);
+      } else if (result.type === "video") {
+        channelId = await getChannelIdFromVideo(result.value);
+      } else if (result.type === "search") {
+        channelId = await searchChannelByName(result.value);
+      }
+
+      if (!channelId) {
+        setError("Channel not found — try a different URL or name");
+        return;
+      }
+
+      const videos = await fetchChannelVideos(channelId);
 
       const enriched = videos.map((v: any) => ({
         ...v,
@@ -66,30 +90,34 @@ export default function ChannelInput() {
     <>
       <Card className="p-6 bg-neutral-900 border-white/10">
         <div className="flex flex-col gap-4">
-          <h2 className="text-lg font-medium text-white">
-            Analyze Youtube Channel
+          <h2 className="text-lg font-semibold text-white">
+            Competitor Channel Analysis
           </h2>
           <p className="text-sm text-neutral-400">
-            Discover which videos are performing best
+            Paste a channel URL to see which videos are crushing it
           </p>
           <div className="flex gap-2">
             <Input
-              placeholder="Paste youtube channel url..."
+              placeholder="Channel URL, video URL, or channel name..."
               className="text-white"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleAnalyze()}
             />
-            {error && <p className="text-sm text-red-400">{error}</p>}
+
             <Button onClick={handleAnalyze} disabled={loading}>
               {loading ? "Analyzing..." : "Analyze"}
             </Button>
           </div>
+          {error && <p className="text-sm text-red-400">{error}</p>}
         </div>
         <div className="flex gap-2">
           <button
             onClick={() => setSortBy("score")}
-            className={`px-3 py-1 text-sm rounded ${
-              sortBy === "score" ? "bg-white text-black" : "bg-white/10"
+            className={`px-3 py-1 text-sm rounded-md transition-colors ${
+              sortBy === "score"
+                ? "bg-neutral-100 text-neutral-900 font-medium"
+                : "bg-white/5 text-neutral-400 hover:bg-white/10 hover:text-white"
             }`}
           >
             Score
@@ -97,8 +125,10 @@ export default function ChannelInput() {
 
           <button
             onClick={() => setSortBy("views")}
-            className={`px-3 py-1 text-sm rounded ${
-              sortBy === "views" ? "bg-white text-black" : "bg-white/10"
+            className={`px-3 py-1 text-sm rounded-md transition-colors ${
+              sortBy === "views"
+                ? "bg-neutral-100 text-neutral-900 font-medium"
+                : "bg-white/5 text-neutral-400 hover:bg-white/10 hover:text-white"
             }`}
           >
             Views
@@ -106,18 +136,20 @@ export default function ChannelInput() {
 
           <button
             onClick={() => setSortBy("likes")}
-            className={`px-3 py-1 text-sm rounded ${
-              sortBy === "likes" ? "bg-white text-black" : "bg-white/10"
+            className={`px-3 py-1 text-sm rounded-md transition-colors ${
+              sortBy === "likes"
+                ? "bg-neutral-100 text-neutral-900 font-medium"
+                : "bg-white/5 text-neutral-400 hover:bg-white/10 hover:text-white"
             }`}
           >
             Likes
           </button>
           <button
-            onClick={() => exportToCSV(videos)}
+            onClick={() => exportToCSV(sortedVideos)}
             disabled={videos.length === 0}
-            className="text-white mr-2 disabled:opacity-50 cursor-none pointer-events-none"
+            className="flex items-center gap-1.5 text-sm text-neutral-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
           >
-            Export CSV
+            ↓ Export CSV
           </button>
         </div>
       </Card>
@@ -131,9 +163,15 @@ export default function ChannelInput() {
         </div>
       )}
       {!loading && videos.length === 0 && (
-        <p className="mt-6 text-sm text-neutral-400">
-          Paste a YouTube channel URL to analyze performance.
-        </p>
+        <div className="mt-10 flex flex-col items-center justify-center text-center gap-2">
+          <p className="text-2xl">
+            <ChartBar />
+          </p>
+          <p className="text-sm font-medium text-neutral-300">No data yet</p>
+          <p className="text-xs text-neutral-500">
+            Paste a YouTube channel URL above and hit Analyze
+          </p>
+        </div>
       )}
       <div className="mt-6 space-y-6">
         <VideoChart videos={sortedVideos} title={sortBy} />
