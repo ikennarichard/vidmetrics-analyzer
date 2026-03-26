@@ -91,10 +91,10 @@ export default function ChannelInput() {
       <Card className="p-6 bg-neutral-900 border-white/10">
         <div className="flex flex-col gap-4">
           <h2 className="text-lg font-semibold text-white">
-            Competitor Channel Analysis
+            Channel Analysis
           </h2>
           <p className="text-sm text-neutral-400">
-            Paste a channel URL to see which videos are crushing it
+            Paste a Youtube channel URL to see which videos are crushing it
           </p>
           <div className="flex gap-2">
             <Input
