@@ -7,6 +7,7 @@ import {
   fetchChannelVideos,
 } from "@/lib/youtube";
 import { useMemo, useState } from "react";
+import VideoChart from "./video-chart";
 import VideoTable from "./video-table";
 
 export default function ChannelInput() {
@@ -62,10 +63,10 @@ export default function ChannelInput() {
     <>
       <Card className="p-6 bg-neutral-900 border-white/10">
         <div className="flex flex-col gap-4">
-          <h2 className="text-lg font-medium text-white">
-            Analyze Competitor Channel
-          </h2>
-
+          <h2 className="text-lg font-medium text-white">Analyze Channel</h2>
+          <p className="text-sm text-neutral-400">
+            Discover which videos are performing best
+          </p>
           <div className="flex gap-2">
             <Input
               placeholder="Paste YouTube channel URL..."
@@ -106,6 +107,7 @@ export default function ChannelInput() {
           </button>
         </div>
       </Card>
+      <VideoChart videos={sortedVideos} title={sortBy} />
       <VideoTable videos={sortedVideos} />
     </>
   );

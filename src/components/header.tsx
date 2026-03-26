@@ -4,10 +4,6 @@ export default function Header() {
       <h1 className="text-lg font-semibold tracking-tight">
         Crushing Videos
       </h1>
-
-      <span className="text-sm text-neutral-400">
-       Analytics
-      </span>
     </header>
   );
 }
