@@ -39,19 +39,19 @@ git clone https://github.com/ikennarichard/crushing-videos.git
 cd crushing-videos
 ```
 
-1. **Install dependencies**
+2. **Install dependencies**
 
 ```bash
 pnpm install
 ```
 
-1. **Create environment file**
+3. **Create environment file**
 
 ```bash
 cp env.example .env # add your api key in env file
 ```
 
-2. **Run locally**
+4. **Run locally**
 
 ```bash
 pnpm dev
@@ -59,7 +59,7 @@ pnpm dev
 
 Open `http://localhost:5173` in your browser.
 
-3. **Build for Prodction**
+5. **Build for Prodction**
 
 ```bash
 pnpm build
