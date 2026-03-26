@@ -1,73 +1,91 @@
-# React + TypeScript + Vite
+# Crushing Videos
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A lightweight tool for analyzing YouTube channels.  
+Paste a YouTube channel URL and instantly see which videos are "crushing it", with metrics, rankings, and export options.
 
-Currently, two official plugins are available:
+## Live Demo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Live URL: [https://crushing-videos.vercel.app](https://crushing-videos.vercel.app)
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Paste a competitor YouTube channel URL
+- Fetch latest videos via YouTube Data API
+- Display video thumbnails, views, likes, comments
+- Automatic performance scoring & ranking
+- "🔥 Crushing It" indicators
+- Sorting by Score, Views, Likes
+- Chart visualization of top-performing videos
+- Export video data to CSV
+- Responsive design
+- Loading skeletons & error handling
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Frontend:** React, Vite, TypeScript
+- **Package Manager:** pnpm
+- **Styling:** Tailwind CSS + shadcn/ui
+- **Charts:** Recharts
+- **Data Fetching:** YouTube Data API v3
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Setup Instructions
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. **Clone the repository**
+
+```bash
+git clone https://github.com/ikennarichard/crushing-videos.git
+cd crushing-videos
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+1. **Install dependencies**
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+pnpm install
 ```
+
+1. **Create environment file**
+
+```bash
+cp env.example .env # add your api key in env file
+```
+
+2. **Run locally**
+
+```bash
+pnpm dev
+```
+
+Open `http://localhost:5173` in your browser.
+
+3. **Build for Prodction**
+
+```bash
+pnpm build
+pnpm preview
+```
+
+## Project structure
+
+```bash
+src/
+  components/
+    channel-input.tsx   # Main input + fetch + state
+    video-table.tsx     # Table for videos + metrics
+    video-chart.tsx     # Top performers chart
+  lib/
+    youtube.ts          # API calls + parsing + scoring
+    export.ts
+  main.tsx
+  App.tsx              # Layout
+```
+
+## Approach
+
+Rapid MVP mindset:
+
+- Start with core functionality, make it work.
+- Add polish (charts, sorting, loading states).
+- Make it demo-ready.
+- Keep scope tight, prioritize reliability over extra features.
