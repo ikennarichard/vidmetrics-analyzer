@@ -1,4 +1,4 @@
-# Crushing Videos
+# Crushing Videos by vidmetrics
 
 A lightweight tool for analyzing YouTube channels.  
 Paste a YouTube channel URL and instantly see which videos are "crushing it", with metrics, rankings, and export options.
