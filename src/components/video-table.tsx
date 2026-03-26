@@ -5,7 +5,7 @@ type Video = {
   score: number;
 };
 
-const format = (num: string) => Intl.NumberFormat().format(Number(num));
+const format = (num: number | string) => Intl.NumberFormat().format(Number(num));
 
 export default function VideoTable({ videos }: { videos: Video[] }) {
   if (!videos.length) return null;
@@ -31,24 +31,24 @@ export default function VideoTable({ videos }: { videos: Video[] }) {
                 index === 0 ? "bg-green-500/10" : ""
               }`}
             >
-              <td className="py-4 flex items-center gap-4">
+              <td className="py-4 flex items-center gap-4 px-1">
                 <img
                   src={video.snippet.thumbnails.default.url}
                   alt=""
                   className="w-24 h-14 rounded"
                 />
-                <span className="font-medium">{video.snippet.title}</span>
-                {video.score > 5000 && (
-                  <span className="ml-2 text-xs text-green-400">
-                    🔥 Crushing it
-                  </span>
-                )}
+                <span className="font-medium inline-block w-full max-w-sm capitalize">
+                  {video.snippet.title}{" "}
+                  {video.score > 5000 && (
+                    <span className="ml-2 text-[7px] text-green-400">🔥</span>
+                  )}
+                </span>
               </td>
 
               <td>{format(video.statistics.viewCount)}</td>
               <td>{video.statistics.likeCount}</td>
               <td>{video.statistics.commentCount}</td>
-              <td className="font-semibold">{format(String(video.score))}</td>
+              <td className="font-semibold">{format(video.score)}</td>
             </tr>
           ))}
         </tbody>
