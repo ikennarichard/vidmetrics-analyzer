@@ -162,9 +162,15 @@ export default function ChannelInput({
         updateLastAnalyzed(meta.id);
 
         setSortBy("score");
-      } catch (err) {
+      } catch (err: any) {
         console.error("Failed to fetch videos", err);
-        setError("Something went wrong — check the URL and try again");
+        if (err.message == "QUOTA_EXCEEDED") {
+          setError(
+            "YouTube API quota exceeded — resets at midnight Pacific Time",
+          );
+        } else {
+          setError("Something went wrong — check the URL and try again");
+        }
       } finally {
         setLoading(false);
         setLoadingStep("");
@@ -215,7 +221,11 @@ export default function ChannelInput({
               disabled={loading}
               className="hover:opacity-85 text-white font-medium px-5"
             >
-              {loading ? <Loader2 color="white" size={20} className="animate-spin" /> : "Analyze"}
+              {loading ? (
+                <Loader2 color="white" size={20} className="animate-spin" />
+              ) : (
+                "Analyze"
+              )}
             </Button>
           </div>
           {comparing && (

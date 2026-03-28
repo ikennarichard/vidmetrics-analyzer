@@ -3,9 +3,14 @@ const BASE_URL = "https://www.googleapis.com/youtube/v3";
 
 // ---- helpers ----
 
-function yt(endpoint: string, params: Record<string, string>) {
+async function yt(endpoint: string, params: Record<string, string>) {
   const query = new URLSearchParams({ ...params, key: API_KEY }).toString();
-  return fetch(`${BASE_URL}/${endpoint}?${query}`).then((r) => r.json());
+  const r = await fetch(`${BASE_URL}/${endpoint}?${query}`);
+  const data = await r.json();
+  if (data.error?.errors?.[0]?.reason === "quotaExceeded") {
+    throw new Error("QUOTA_EXCEEDED");
+  }
+  return data;
 }
 
 // ---- resolvers ----
@@ -61,6 +66,9 @@ export async function searchChannelByName(query: string): Promise<string> {
 export async function fetchChannelInfo(channelId: string) {
   const data = await yt("channels", { part: "snippet", id: channelId });
   const channel = data.items?.[0];
+
+  if (!channel) throw new Error("Channel not found");
+
   return {
     id: channel.id,
     name: channel.snippet.title,
