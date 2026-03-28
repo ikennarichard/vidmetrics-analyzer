@@ -157,7 +157,7 @@ export default function ChannelInput({
               onKeyDown={(e) => e.key === "Enter" && handleAnalyze()}
             />
 
-            <Button onClick={handleAnalyze} disabled={loading}>
+            <Button onClick={() => handleAnalyze()} disabled={loading}>
               {loading ? loadingStep : "Analyze"}
             </Button>
           </div>
